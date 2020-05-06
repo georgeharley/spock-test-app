@@ -17,7 +17,7 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/"}
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
@@ -26,10 +26,29 @@ dependencies {
     testImplementation 'org.spockframework:spock-core'
 }
 
-task collectJars(type: Copy) {
-    description "Copy dependency Jars into folder libs/jars"
-    into "$buildDir/libs/jars"
-    from configurations.testRuntimeClasspath
+task uberJar(type: Jar) {
+    description "Create uber jar (except for Spock types)"
+    archiveBaseName = 'all-tests'
+    from files(sourceSets.test.output.classesDirs)
+    from files(sourceSets.test.output.resourcesDir)
+    from {
+        configurations.testRuntimeClasspath
+                .filter {
+                    !it.name.startsWith("spock-")
+                }
+                .collect {
+                    it.isDirectory() ? it : zipTree(it)
+                }
+    }
+    with jar
+}
+
+task collectSpockJars(type: Copy) {
+    description "Copy Spock Jars into folder libs"
+    into "$buildDir/libs"
+    from configurations.testRuntimeClasspath.filter {
+        it.name.startsWith("spock-")
+    }
 }
 
 test {

@@ -1,5 +1,6 @@
 HELP.md
 .gradle
+/bin/
 /build/
 */build/
 */bin/
@@ -12,3 +13,6 @@ HELP.md
 *.ipr
 /out/
 
+.classpath
+.settings
+.project
