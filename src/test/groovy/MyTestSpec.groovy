@@ -11,6 +11,6 @@ class MyTestSpec extends Specification {
 
     def "my other simple test" () {
         expect:
-        assert "Dylan".length() == 5
+        assert "Eleanor".length() == 7
     }
 }
